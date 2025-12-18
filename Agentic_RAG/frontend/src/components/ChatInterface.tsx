@@ -49,13 +49,13 @@ export function ChatInterface({ messages, onSendMessage, onDocumentFragmentClick
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-3 border-b border-[#60acc2]/30 flex items-center justify-between">
-        <h2 className="text-base text-[#405a03] font-medium">知识库问答</h2>
+      <div className="p-3 border-b border-[#f5d565]/60 flex items-center justify-between bg-white/70 rounded-t-2xl">
+        <h2 className="text-base text-[#7a4a00] font-semibold">知识库问答</h2>
         <Button
           onClick={onClearChat}
           variant="outline"
           size="sm"
-          className="bg-gradient-to-r from-[#ccd9ed] to-[#d1d3e6] hover:from-[#ccd9ed]/80 hover:to-[#d1d3e6]/80 border-[#60acc2]/40 text-gray-700 backdrop-blur-sm shadow-sm transition-colors duration-300 cursor-pointer"
+          className="bg-[#facc15] hover:bg-[#eab308] border-[#f5d565] text-[#7a4a00] shadow-sm transition-colors duration-300 cursor-pointer"
         >
           <Trash2 className="w-4 h-4" />
         </Button>
@@ -75,29 +75,29 @@ export function ChatInterface({ messages, onSendMessage, onDocumentFragmentClick
                 <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
                   <div className={`flex max-w-[80%] ${message.isUser ? 'flex-row-reverse' : 'flex-row'}`}>
                     <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center backdrop-blur-sm shadow-sm ${
-                      message.isUser ? 'bg-gradient-to-r from-[#fce6f4] to-[#d5d6eb] text-gray-700 ml-2' : 'bg-gradient-to-r from-[#60acc2] to-[#ccd9ed] text-white mr-2'
+                      message.isUser ? 'bg-gradient-to-r from-[#facc15] to-[#f5d565] text-[#7a4a00] ml-2' : 'bg-gradient-to-r from-white to-[#fff7d6] text-[#7a4a00] mr-2 border border-[#f5d565]/70'
                     }`}>
                       {message.isUser ? <User className="w-3 h-3" /> : <Bot className="w-3 h-3" />}
                     </div>
                     
                     <div className={`rounded-xl p-2 backdrop-blur-sm shadow-lg ${
                       message.isUser 
-                        ? 'bg-gradient-to-r from-[#fce6f4]/70 to-[#d5d6eb]/70 text-gray-800 border border-[#60acc2]/30' 
-                        : 'bg-gradient-to-r from-[#ccd9ed]/70 to-[#d1d3e6]/70 text-gray-800 border border-[#60acc2]/30'
+                        ? 'bg-gradient-to-r from-[#fff4c2] to-[#fde68a] text-[#7a4a00] border border-[#f3c73c]/70' 
+                        : 'bg-white text-gray-800 border border-[#f5d565]/70'
                     }`}>
                       <MessageContent content={message.content} isUser={message.isUser} />
                       
                       {message.documentFragments && message.documentFragments.length > 0 && (
-                        <div className="mt-2 pt-2 border-t border-[#60acc2]/30">
-                          <p className="text-xs text-gray-700 mb-1">参考文档片段：</p>
+                        <div className="mt-2 pt-2 border-t border-[#f5d565]/60">
+                          <p className="text-xs text-[#7a4a00] mb-1">参考文档片段：</p>
                           <div className="space-y-2">
                             {message.documentFragments.map((fragment) => (
                               <button
                                 key={fragment.id}
                                 onClick={() => onDocumentFragmentClick(fragment)}
-                                className="block w-full text-left p-2 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 hover:from-[#ccd9ed]/80 hover:to-[#d1d3e6]/80 rounded-lg border border-[#60acc2]/30 transition-colors duration-300 backdrop-blur-sm shadow-sm cursor-pointer"
+                                className="block w-full text-left p-2 bg-white hover:bg-[#fff4c2] rounded-lg border border-[#f5d565]/70 transition-colors duration-300 backdrop-blur-sm shadow-sm cursor-pointer"
                               >
-                                <span className="text-gray-700 text-xs">
+                                <span className="text-[#7a4a00] text-xs">
                                   {truncateText(fragment.content, 20)}
                                 </span>
                               </button>
@@ -117,7 +117,7 @@ export function ChatInterface({ messages, onSendMessage, onDocumentFragmentClick
         </div>
       </ScrollArea>
 
-      <div className="p-3 border-t border-[#60acc2]/30">
+      <div className="p-3 border-t border-[#f5d565]/60 bg-white/80 rounded-b-2xl">
         <div className="flex space-x-2">
           <Input
             value={inputValue}
@@ -125,12 +125,12 @@ export function ChatInterface({ messages, onSendMessage, onDocumentFragmentClick
             onKeyPress={handleKeyPress}
             placeholder="请输入您的问题..."
             disabled={isLoading}
-            className="flex-1 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 border-[#60acc2]/40 text-gray-800 placeholder-gray-500 backdrop-blur-sm focus:from-[#ccd9ed]/80 focus:to-[#d1d3e6]/80 focus:border-[#405a03]/50 transition-colors duration-300 shadow-sm disabled:opacity-50"
+            className="flex-1 bg-white border border-[#f5d565] text-gray-800 placeholder-gray-500 backdrop-blur-sm focus:border-[#d69c00] focus:ring-2 focus:ring-[#fde68a] transition-colors duration-300 shadow-sm disabled:opacity-50"
           />
           <Button 
             onClick={handleSend}
             disabled={!inputValue.trim() || isLoading}
-            className="bg-gradient-to-r from-[#405a03] via-[#60acc2] to-[#fce6f4] hover:from-[#405a03]/90 hover:via-[#60acc2]/90 hover:to-[#fce6f4]/90 text-white border-0 shadow-lg backdrop-blur-sm transition-colors duration-300 disabled:opacity-50 cursor-pointer"
+            className="bg-[#facc15] hover:bg-[#eab308] text-[#7a4a00] border border-[#f5d565] shadow-md backdrop-blur-sm transition-colors duration-300 disabled:opacity-50 cursor-pointer"
             size="sm"
           >
             <Send className="w-3 h-3" />

@@ -132,7 +132,7 @@ export function KnowledgeBaseManager({
                 >
                   <div className="flex items-center justify-between mb-0.5">
                     <span className="text-[#d48f00] text-sm font-medium">文档片段{fragment.index}</span>
-                    <span className="text-green-700 text-xs font-medium">相关性 {fragment.relevance.toFixed(2)}</span>
+                    <span className="text-[#b36b00] text-xs font-medium">相关性 {fragment.relevance.toFixed(2)}</span>
                   </div>
                   <p className="text-[#4a3b00] text-xs leading-relaxed">
                     {truncateText(fragment.content, 100)}

@@ -342,7 +342,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
             <div className="text-center space-y-6">
               {isSuccess ? (
                 <>
-                  <CheckCircle className="w-16 h-16 mx-auto text-green-500" />
+                  <CheckCircle className="w-16 h-16 mx-auto text-[#d48f00]" />
                   <div>
                     <h3 className="text-lg text-[#4a3b00] mb-2">向量数据库已创建</h3>
                     <p className="text-[#6b4a00] text-sm">您现在可以开始使用知识库进行问答了</p>

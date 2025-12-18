@@ -146,7 +146,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg backdrop-blur-2xl bg-gradient-to-br from-[#FFD306]/95 to-[#FFD306]/90 border border-[#FFD306]/40 shadow-2xl shadow-[#FFD306]/30">
+      <DialogContent className="sm:max-w-lg backdrop-blur-2xl bg-white border border-[#FFD306]/50 shadow-2xl shadow-[#FFD306]/30">
         <DialogHeader>
           <DialogTitle className="text-gray-800">
             {step === 'upload' && '上传文档'}

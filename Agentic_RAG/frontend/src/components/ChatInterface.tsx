@@ -49,13 +49,13 @@ export function ChatInterface({ messages, onSendMessage, onDocumentFragmentClick
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-3 border-b border-[#FFD306]/30 flex items-center justify-between">
+      <div className="p-3 border-b border-primary/30 flex items-center justify-between">
         <h2 className="text-base text-gray-800 font-medium">知识库问答</h2>
         <Button
           onClick={onClearChat}
           variant="outline"
           size="sm"
-          className="bg-gradient-to-r from-[#FFD306]/80 to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306] border-[#FFD306]/40 text-gray-700 backdrop-blur-sm shadow-sm transition-colors duration-300 cursor-pointer"
+          className="bg-gradient-to-r from-primary/80 to-primary hover:from-primary hover:to-primary border-primary/40 text-gray-700 backdrop-blur-sm shadow-sm transition-colors duration-300 cursor-pointer"
         >
           <Trash2 className="w-4 h-4" />
         </Button>
@@ -75,27 +75,27 @@ export function ChatInterface({ messages, onSendMessage, onDocumentFragmentClick
                 <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
                   <div className={`flex max-w-[80%] ${message.isUser ? 'flex-row-reverse' : 'flex-row'}`}>
                     <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center backdrop-blur-sm shadow-sm ${
-                      message.isUser ? 'bg-[#FFD306] text-white ml-2' : 'bg-[#FFD306]/20 text-gray-800 mr-2'
+                      message.isUser ? 'bg-primary text-primary-foreground ml-2' : 'bg-primary/20 text-gray-800 mr-2'
                     }`}>
                       {message.isUser ? <User className="w-3 h-3" /> : <Bot className="w-3 h-3" />}
                     </div>
                     
                     <div className={`rounded-xl p-2 backdrop-blur-sm shadow-lg ${
                       message.isUser 
-                        ? 'bg-[#FFD306] text-white border border-[#FFD306]/30' 
-                        : 'bg-white text-gray-800 border border-[#FFD306]/30'
+                        ? 'bg-primary text-primary-foreground border border-primary/30' 
+                        : 'bg-white text-gray-800 border border-primary/30'
                     }`}>
                       <MessageContent content={message.content} isUser={message.isUser} />
                       
                       {message.documentFragments && message.documentFragments.length > 0 && (
-                        <div className="mt-2 pt-2 border-t border-[#FFD306]/30">
+                        <div className="mt-2 pt-2 border-t border-primary/30">
                           <p className="text-xs text-gray-700 mb-1">参考文档片段：</p>
                           <div className="space-y-2">
                             {message.documentFragments.map((fragment) => (
                               <button
                                 key={fragment.id}
                                 onClick={() => onDocumentFragmentClick(fragment)}
-                                className="block w-full text-left p-2 bg-[#FFD306]/10 hover:bg-[#FFD306]/20 rounded-lg border border-[#FFD306]/30 transition-colors duration-300 backdrop-blur-sm shadow-sm cursor-pointer"
+                                className="block w-full text-left p-2 bg-primary/10 hover:bg-primary/20 rounded-lg border border-primary/30 transition-colors duration-300 backdrop-blur-sm shadow-sm cursor-pointer"
                               >
                                 <span className="text-gray-700 text-xs">
                                   {truncateText(fragment.content, 20)}
@@ -117,7 +117,7 @@ export function ChatInterface({ messages, onSendMessage, onDocumentFragmentClick
         </div>
       </ScrollArea>
 
-      <div className="p-3 border-t border-[#FFD306]/30">
+      <div className="p-3 border-t border-primary/30">
         <div className="flex space-x-2">
           <Input
             value={inputValue}
@@ -125,12 +125,12 @@ export function ChatInterface({ messages, onSendMessage, onDocumentFragmentClick
             onKeyPress={handleKeyPress}
             placeholder="请输入您的问题..."
             disabled={isLoading}
-            className="flex-1 bg-white/80 border-[#FFD306]/40 text-gray-800 placeholder-gray-500 backdrop-blur-sm focus:border-[#FFD306]/50 transition-colors duration-300 shadow-sm disabled:opacity-50"
+            className="flex-1 bg-white/80 border-primary/40 text-gray-800 placeholder-gray-500 backdrop-blur-sm focus:border-primary/50 transition-colors duration-300 shadow-sm disabled:opacity-50"
           />
           <Button 
             onClick={handleSend}
             disabled={!inputValue.trim() || isLoading}
-            className="bg-[#FFD306] hover:bg-[#FFD306]/80 text-white border-0 shadow-lg backdrop-blur-sm transition-colors duration-300 disabled:opacity-50 cursor-pointer"
+            className="bg-primary hover:bg-primary/80 text-primary-foreground border-0 shadow-lg backdrop-blur-sm transition-colors duration-300 disabled:opacity-50 cursor-pointer"
             size="sm"
           >
             <Send className="w-3 h-3" />

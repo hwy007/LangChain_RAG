@@ -189,12 +189,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#fffdf5] via-[#fff6d4] via-[#ffefb3] to-[#ffe59a] text-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#fffef8] via-[#fff6d6] to-[#ffe8a3] text-[#4a3b00]">
       <Toaster position="top-center" richColors />
       <Header />
       
-      <div className="flex h-[calc(100vh-48px)] p-2 gap-2">
-        <div className="w-2/3 backdrop-blur-2xl bg-white/80 border border-[#f2c94c]/40 rounded-2xl shadow-2xl shadow-[#f3d46b]/25">
+      <div className="flex h-[calc(100vh-64px)] p-2 gap-2">
+        <div className="w-2/3 backdrop-blur-2xl bg-white/90 border border-[#f6d465]/45 rounded-2xl shadow-2xl shadow-[#f2cf5b]/25">
           <ChatInterface 
             messages={messages}
             onSendMessage={handleSendMessage}
@@ -204,7 +204,7 @@ export default function App() {
           />
         </div>
         
-        <div className="w-1/3 backdrop-blur-2xl bg-white/75 border border-[#f2c94c]/35 rounded-2xl shadow-2xl shadow-[#f3d46b]/25">
+        <div className="w-1/3 backdrop-blur-2xl bg-white/85 border border-[#f6d465]/40 rounded-2xl shadow-2xl shadow-[#f2cf5b]/25">
           <KnowledgeBaseManager
             vectorDatabase={vectorDatabase}
             retrievedFragments={retrievedFragments}

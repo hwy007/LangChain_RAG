@@ -180,7 +180,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
                 />
                 <label
                   htmlFor="file-upload"
-                  className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306] text-white rounded-lg cursor-pointer shadow-lg backdrop-blur-sm transition-colors duration-300"
+                  className="inline-flex items-center px-4 py-2 bg-[#FFD306] hover:bg-[#f2c200] text-gray-900 rounded-lg cursor-pointer shadow-lg backdrop-blur-sm transition-colors duration-300"
                 >
                   <FileText className="w-4 h-4 mr-2" />
                   选择文件
@@ -198,13 +198,13 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
               )}
               
               <div className="flex justify-end space-x-3">
-                <Button onClick={handleClose} variant="outline" className="border-[#FFD306]/40 text-gray-700 bg-[#FFD306]/60 hover:bg-[#FFD306]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer">
+                <Button onClick={handleClose} variant="outline" className="border-[#FFD306]/40 text-gray-900 bg-[#FFD306]/60 hover:bg-[#FFD306]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer">
                   取消
                 </Button>
                 <Button 
                   onClick={handleNextStep}
                   disabled={!selectedFile}
-                  className="bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306] text-white border-0 shadow-lg transition-colors duration-300 disabled:opacity-50 cursor-pointer"
+                  className="bg-[#FFD306] hover:bg-[#f2c200] text-gray-900 border-0 shadow-lg transition-colors duration-300 disabled:opacity-50 cursor-pointer"
                 >
                   下一步
                 </Button>
@@ -309,12 +309,12 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
               </div>
 
               <div className="flex justify-end space-x-3">
-                <Button onClick={handleClose} variant="outline" className="border-[#FFD306]/40 text-gray-700 bg-[#FFD306]/60 hover:bg-[#FFD306]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer">
+                <Button onClick={handleClose} variant="outline" className="border-[#FFD306]/40 text-gray-900 bg-[#FFD306]/60 hover:bg-[#FFD306]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer">
                   取消
                 </Button>
                 <Button 
                   onClick={handleNextStep}
-                  className="bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306] text-white border-0 shadow-lg transition-colors duration-300 cursor-pointer"
+                  className="bg-[#FFD306] hover:bg-[#f2c200] text-gray-900 border-0 shadow-lg transition-colors duration-300 cursor-pointer"
                 >
                   保存
                 </Button>
@@ -363,7 +363,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
               
               <Button 
                 onClick={handleSave}
-                className="w-full bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306] text-white border-0 shadow-lg transition-colors duration-300 cursor-pointer"
+                className="w-full bg-[#FFD306] hover:bg-[#f2c200] text-gray-900 border-0 shadow-lg transition-colors duration-300 cursor-pointer"
               >
                 确认
               </Button>

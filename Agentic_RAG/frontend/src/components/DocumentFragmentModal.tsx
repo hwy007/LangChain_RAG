@@ -15,7 +15,7 @@ export function DocumentFragmentModal({ open, onOpenChange, fragment }: Document
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl max-h-[85vh] backdrop-blur-2xl bg-gradient-to-br from-[#FFD306]/95 to-[#FFD306]/90 border border-[#FFD306]/40 shadow-2xl shadow-[#FFD306]/30 flex flex-col">
+      <DialogContent className="sm:max-w-4xl max-h-[85vh] backdrop-blur-2xl bg-white border border-[#FFD306]/40 shadow-2xl shadow-[#FFD306]/30 flex flex-col">
         <DialogHeader className="flex-shrink-0 pb-0">
           <DialogTitle className="text-gray-800 text-lg">
             文档片段{fragment.index}

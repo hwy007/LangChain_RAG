@@ -4,12 +4,12 @@ import { Bot } from 'lucide-react';
 export function TypingIndicator() {
   return (
     <div className="flex justify-start">
-      <div className="flex max-w-[80%] flex-row">
-        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center backdrop-blur-sm shadow-sm bg-gradient-to-r from-[#FFD306] to-[#FFD306] text-white mr-2">
+      <div className="flex max-w-[80%] flex-row items-start space-x-2">
+        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center backdrop-blur-sm shadow-sm bg-primary/20 text-gray-800">
           <Bot className="w-3 h-3" />
         </div>
-        
-        <div className="rounded-xl p-3 backdrop-blur-sm shadow-lg bg-gradient-to-r from-[#FFD306]/70 to-[#FFD306]/70 border border-[#FFD306]/30">
+
+        <div className="w-fit rounded-xl px-3 py-2 backdrop-blur-sm shadow-lg bg-white text-gray-800 border border-primary/30">
           <div className="flex items-center space-x-2">
             <div className="flex space-x-1">
               <div className="w-2 h-2 bg-[#FFD306] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>

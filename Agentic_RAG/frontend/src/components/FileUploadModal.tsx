@@ -146,7 +146,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg backdrop-blur-2xl bg-gradient-to-br from-[#FFD306]/95 to-[#FFD306]/90 border border-[#FFD306]/40 shadow-2xl shadow-[#FFD306]/30">
+      <DialogContent className="sm:max-w-lg backdrop-blur-2xl bg-white border border-[#FFD306]/50 shadow-2xl shadow-[#FFD306]/30">
         <DialogHeader>
           <DialogTitle className="text-gray-800">
             {step === 'upload' && '上传文档'}
@@ -204,7 +204,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
                 <Button 
                   onClick={handleNextStep}
                   disabled={!selectedFile}
-                  className="bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306] text-white border-0 shadow-lg transition-colors duration-300 disabled:opacity-50 cursor-pointer"
+                  className="bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#f5c200] hover:to-[#f5c200] text-gray-900 hover:text-white border-0 shadow-lg transition-colors duration-300 disabled:opacity-50 cursor-pointer"
                 >
                   下一步
                 </Button>
@@ -314,7 +314,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
                 </Button>
                 <Button 
                   onClick={handleNextStep}
-                  className="bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306] text-white border-0 shadow-lg transition-colors duration-300 cursor-pointer"
+                  className="bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#f5c200] hover:to-[#f5c200] text-gray-900 hover:text-white border-0 shadow-lg transition-colors duration-300 cursor-pointer"
                 >
                   保存
                 </Button>
@@ -363,7 +363,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
               
               <Button 
                 onClick={handleSave}
-                className="w-full bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306] text-white border-0 shadow-lg transition-colors duration-300 cursor-pointer"
+                className="w-full bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#f5c200] hover:to-[#f5c200] text-gray-900 hover:text-white border-0 shadow-lg transition-colors duration-300 cursor-pointer"
               >
                 确认
               </Button>

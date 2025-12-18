@@ -54,7 +54,7 @@ export function KnowledgeBaseManager({
           </p>
           <Button 
             onClick={onStartUpload}
-            className="bg-gradient-to-r from-primary/80 to-primary hover:from-primary hover:to-primary/80 text-white border-0 shadow-lg backdrop-blur-sm transition-colors duration-300 cursor-pointer"
+            className="bg-gradient-to-r from-primary/80 to-primary hover:from-primary hover:to-primary/80 text-gray-900 hover:text-white border-0 shadow-lg backdrop-blur-sm transition-colors duration-300 cursor-pointer"
             size="default"
           >
             <Upload className="w-3 h-3 mr-1" />

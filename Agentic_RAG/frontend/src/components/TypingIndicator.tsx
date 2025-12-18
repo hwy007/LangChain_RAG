@@ -5,10 +5,10 @@ export function TypingIndicator() {
   return (
     <div className="flex justify-start">
       <div className="flex max-w-[80%] flex-row">
-        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center backdrop-blur-sm shadow-sm bg-gradient-to-r from-[#FFD306] to-[#FFD306] text-white mr-2">
+        <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center backdrop-blur-sm shadow-sm bg-primary/20 text-gray-800 mr-2">
           <Bot className="w-3 h-3" />
         </div>
-        
+
         <div className="rounded-xl p-3 backdrop-blur-sm shadow-lg bg-gradient-to-r from-[#FFD306]/70 to-[#FFD306]/70 border border-[#FFD306]/30">
           <div className="flex items-center space-x-2">
             <div className="flex space-x-1">

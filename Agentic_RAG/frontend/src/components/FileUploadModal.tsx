@@ -7,7 +7,7 @@ import { Progress } from './ui/progress';
 import { Upload, FileText, Plus, Minus, CheckCircle, XCircle } from 'lucide-react';
 import type { VectorDatabase } from '../App';
 import { uploadFiles, createKnowledgeBase } from '../services/api';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface FileUploadModalProps {
   open: boolean;
@@ -146,9 +146,9 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg backdrop-blur-2xl bg-gradient-to-br from-[#ccd9ed]/95 to-[#d1d3e6]/90 border border-[#60acc2]/40 shadow-2xl shadow-[#d0ccce]/30">
+      <DialogContent className="sm:max-w-lg backdrop-blur-2xl bg-gradient-to-br from-[#FFD306]/95 to-[#FFD306]/90 border border-[#FFD306]/40 shadow-2xl shadow-[#FFD306]/30">
         <DialogHeader>
-          <DialogTitle className="text-[#405a03]">
+          <DialogTitle className="text-gray-800">
             {step === 'upload' && '上传文档'}
             {step === 'config' && '配置向量数据库'}
             {step === 'processing' && '创建向量数据库'}
@@ -167,8 +167,8 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
         <div className="p-6 space-y-6">
           {step === 'upload' && (
             <div className="space-y-4">
-              <div className="border-2 border-dashed border-[#60acc2]/50 rounded-xl p-8 text-center backdrop-blur-sm bg-gradient-to-br from-[#ccd9ed]/40 to-[#d1d3e6]/40">
-                <Upload className="w-12 h-12 mx-auto mb-4 text-[#60acc2]" />
+              <div className="border-2 border-dashed border-[#FFD306]/50 rounded-xl p-8 text-center backdrop-blur-sm bg-gradient-to-br from-[#FFD306]/40 to-[#FFD306]/40">
+                <Upload className="w-12 h-12 mx-auto mb-4 text-[#FFD306]" />
                 <p className="text-gray-800 mb-2">选择文档文件</p>
                 <p className="text-gray-600 text-sm mb-4">仅支持 .md 格式</p>
                 <input
@@ -180,7 +180,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
                 />
                 <label
                   htmlFor="file-upload"
-                  className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#405a03] via-[#60acc2] to-[#fce6f4] hover:from-[#405a03]/90 hover:via-[#60acc2]/90 hover:to-[#fce6f4]/90 text-white rounded-lg cursor-pointer shadow-lg backdrop-blur-sm transition-colors duration-300"
+                  className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306] text-white rounded-lg cursor-pointer shadow-lg backdrop-blur-sm transition-colors duration-300"
                 >
                   <FileText className="w-4 h-4 mr-2" />
                   选择文件
@@ -188,9 +188,9 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
               </div>
               
               {selectedFile && (
-                <div className="p-4 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 rounded-xl backdrop-blur-sm border border-[#60acc2]/40">
+                <div className="p-4 bg-[#FFD306]/60 rounded-xl backdrop-blur-sm border border-[#FFD306]/40">
                   <p className="text-gray-800">已选择文件:</p>
-                  <p className="text-[#60acc2] font-medium">{selectedFile.name}</p>
+                  <p className="text-[#FFD306] font-medium">{selectedFile.name}</p>
                   <p className="text-gray-600 text-sm">
                     {(selectedFile.size / 1024).toFixed(1)} KB
                   </p>
@@ -198,13 +198,13 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
               )}
               
               <div className="flex justify-end space-x-3">
-                <Button onClick={handleClose} variant="outline" className="border-[#60acc2]/40 text-gray-700 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 hover:from-[#ccd9ed]/80 hover:to-[#d1d3e6]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer">
+                <Button onClick={handleClose} variant="outline" className="border-[#FFD306]/40 text-gray-700 bg-[#FFD306]/60 hover:bg-[#FFD306]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer">
                   取消
                 </Button>
                 <Button 
                   onClick={handleNextStep}
                   disabled={!selectedFile}
-                  className="bg-gradient-to-r from-[#60acc2] via-[#ccd9ed] to-[#fce6f4] hover:from-[#60acc2]/90 hover:via-[#ccd9ed]/90 hover:to-[#fce6f4]/90 text-gray-800 border-0 shadow-lg transition-colors duration-300 disabled:opacity-50 cursor-pointer"
+                  className="bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306] text-white border-0 shadow-lg transition-colors duration-300 disabled:opacity-50 cursor-pointer"
                 >
                   下一步
                 </Button>
@@ -219,7 +219,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
                 <Input
                   value={dbName}
                   onChange={(e) => setDbName(e.target.value)}
-                  className="bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 border-[#60acc2]/40 text-gray-800 backdrop-blur-sm focus:from-[#ccd9ed]/80 focus:to-[#d1d3e6]/80 focus:border-[#405a03]/50 transition-colors duration-300"
+                  className="bg-white/80 border-[#FFD306]/40 text-gray-800 backdrop-blur-sm focus:border-[#FFD306]/50 transition-colors duration-300"
                   placeholder="输入数据库名称"
                 />
               </div>
@@ -231,7 +231,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
                     variant="outline"
                     size="sm"
                     onClick={() => setMaxChunkSize(adjustValue(maxChunkSize, -256, 256))}
-                    className="border-[#60acc2]/40 text-gray-700 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 hover:from-[#ccd9ed]/80 hover:to-[#d1d3e6]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer"
+                    className="border-[#FFD306]/40 text-gray-700 bg-[#FFD306]/60 hover:bg-[#FFD306]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer"
                   >
                     <Minus className="w-4 h-4" />
                   </Button>
@@ -239,13 +239,13 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
                     type="number"
                     value={maxChunkSize}
                     onChange={(e) => setMaxChunkSize(Math.max(256, parseInt(e.target.value) || 2048))}
-                    className="flex-1 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 border-[#60acc2]/40 text-gray-800 text-center backdrop-blur-sm focus:from-[#ccd9ed]/80 focus:to-[#d1d3e6]/80 focus:border-[#405a03]/50 transition-colors duration-300"
+                    className="flex-1 bg-white/80 border-[#FFD306]/40 text-gray-800 text-center backdrop-blur-sm focus:border-[#FFD306]/50 transition-colors duration-300"
                   />
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setMaxChunkSize(adjustValue(maxChunkSize, 256, 256))}
-                    className="border-[#60acc2]/40 text-gray-700 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 hover:from-[#ccd9ed]/80 hover:to-[#d1d3e6]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer"
+                    className="border-[#FFD306]/40 text-gray-700 bg-[#FFD306]/60 hover:bg-[#FFD306]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />
                   </Button>
@@ -259,7 +259,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
                     variant="outline"
                     size="sm"
                     onClick={() => setMaxOverlap(adjustValue(maxOverlap, -50, 0))}
-                    className="border-[#60acc2]/40 text-gray-700 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 hover:from-[#ccd9ed]/80 hover:to-[#d1d3e6]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer"
+                    className="border-[#FFD306]/40 text-gray-700 bg-[#FFD306]/60 hover:bg-[#FFD306]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer"
                   >
                     <Minus className="w-4 h-4" />
                   </Button>
@@ -267,13 +267,13 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
                     type="number"
                     value={maxOverlap}
                     onChange={(e) => setMaxOverlap(Math.max(0, parseInt(e.target.value) || 100))}
-                    className="flex-1 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 border-[#60acc2]/40 text-gray-800 text-center backdrop-blur-sm focus:from-[#ccd9ed]/80 focus:to-[#d1d3e6]/80 focus:border-[#405a03]/50 transition-colors duration-300"
+                    className="flex-1 bg-white/80 border-[#FFD306]/40 text-gray-800 text-center backdrop-blur-sm focus:border-[#FFD306]/50 transition-colors duration-300"
                   />
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setMaxOverlap(adjustValue(maxOverlap, 50, 0))}
-                    className="border-[#60acc2]/40 text-gray-700 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 hover:from-[#ccd9ed]/80 hover:to-[#d1d3e6]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer"
+                    className="border-[#FFD306]/40 text-gray-700 bg-[#FFD306]/60 hover:bg-[#FFD306]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />
                   </Button>
@@ -287,7 +287,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
                     variant="outline"
                     size="sm"
                     onClick={() => setTopK(adjustValue(topK, -1, 1))}
-                    className="border-[#60acc2]/40 text-gray-700 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 hover:from-[#ccd9ed]/80 hover:to-[#d1d3e6]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer"
+                    className="border-[#FFD306]/40 text-gray-700 bg-[#FFD306]/60 hover:bg-[#FFD306]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer"
                   >
                     <Minus className="w-4 h-4" />
                   </Button>
@@ -295,13 +295,13 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
                     type="number"
                     value={topK}
                     onChange={(e) => setTopK(Math.max(1, parseInt(e.target.value) || 3))}
-                    className="flex-1 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 border-[#60acc2]/40 text-gray-800 text-center backdrop-blur-sm focus:from-[#ccd9ed]/80 focus:to-[#d1d3e6]/80 focus:border-[#405a03]/50 transition-colors duration-300"
+                    className="flex-1 bg-white/80 border-[#FFD306]/40 text-gray-800 text-center backdrop-blur-sm focus:border-[#FFD306]/50 transition-colors duration-300"
                   />
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setTopK(adjustValue(topK, 1, 1))}
-                    className="border-[#60acc2]/40 text-gray-700 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 hover:from-[#ccd9ed]/80 hover:to-[#d1d3e6]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer"
+                    className="border-[#FFD306]/40 text-gray-700 bg-[#FFD306]/60 hover:bg-[#FFD306]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />
                   </Button>
@@ -309,12 +309,12 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
               </div>
 
               <div className="flex justify-end space-x-3">
-                <Button onClick={handleClose} variant="outline" className="border-[#60acc2]/40 text-gray-700 bg-gradient-to-r from-[#ccd9ed]/60 to-[#d1d3e6]/60 hover:from-[#ccd9ed]/80 hover:to-[#d1d3e6]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer">
+                <Button onClick={handleClose} variant="outline" className="border-[#FFD306]/40 text-gray-700 bg-[#FFD306]/60 hover:bg-[#FFD306]/80 backdrop-blur-sm transition-colors duration-300 cursor-pointer">
                   取消
                 </Button>
                 <Button 
                   onClick={handleNextStep}
-                  className="bg-gradient-to-r from-[#60acc2] via-[#ccd9ed] to-[#fce6f4] hover:from-[#60acc2]/90 hover:via-[#ccd9ed]/90 hover:to-[#fce6f4]/90 text-gray-800 border-0 shadow-lg transition-colors duration-300 cursor-pointer"
+                  className="bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306] text-white border-0 shadow-lg transition-colors duration-300 cursor-pointer"
                 >
                   保存
                 </Button>
@@ -324,7 +324,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
 
           {step === 'processing' && (
             <div className="text-center space-y-6">
-              <div className="w-16 h-16 mx-auto bg-gradient-to-r from-[#405a03] via-[#60acc2] to-[#fce6f4] rounded-full flex items-center justify-center animate-pulse shadow-lg">
+              <div className="w-16 h-16 mx-auto bg-gradient-to-r from-[#FFD306] to-[#FFD306] rounded-full flex items-center justify-center animate-pulse shadow-lg">
                 <Upload className="w-8 h-8 text-white" />
               </div>
               <div>
@@ -347,7 +347,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
                     <h3 className="text-lg text-gray-800 mb-2">向量数据库已创建</h3>
                     <p className="text-gray-600 text-sm">您现在可以开始使用知识库进行问答了</p>
                     {totalChunks > 0 && (
-                      <p className="text-[#60acc2] text-sm mt-2">已成功创建 {totalChunks} 个文档片段</p>
+                      <p className="text-[#FFD306] text-sm mt-2">已成功创建 {totalChunks} 个文档片段</p>
                     )}
                   </div>
                 </>
@@ -363,7 +363,7 @@ export function FileUploadModal({ open, onOpenChange, onUploadComplete }: FileUp
               
               <Button 
                 onClick={handleSave}
-                className="w-full bg-gradient-to-r from-[#60acc2] via-[#ccd9ed] to-[#fce6f4] hover:from-[#60acc2]/90 hover:via-[#ccd9ed]/90 hover:to-[#fce6f4]/90 text-gray-800 border-0 shadow-lg transition-colors duration-300 cursor-pointer"
+                className="w-full bg-gradient-to-r from-[#FFD306] to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306] text-white border-0 shadow-lg transition-colors duration-300 cursor-pointer"
               >
                 确认
               </Button>

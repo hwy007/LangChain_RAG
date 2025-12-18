@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { ChatInterface } from './components/ChatInterface';
 import { KnowledgeBaseManager } from './components/KnowledgeBaseManager';
-import { QRCodeModal } from './components/QRCodeModal';
 import { FileUploadModal } from './components/FileUploadModal';
 import { DocumentFragmentModal } from './components/DocumentFragmentModal';
 import { chat, recallTest } from './services/api';
-import { toast, Toaster } from 'sonner@2.0.3';
+import { toast, Toaster } from 'sonner';
 import { testAPIConnection, printAPIConfig } from './utils/test-api-connection';
 
 export interface DocumentFragment {
@@ -195,12 +194,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#a8c5e6] via-[#b8d4f0] via-[#cdd9ed] to-[#e8c4d8] text-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-white to-yellow-50 text-gray-800">
       <Toaster position="top-center" richColors />
       <Header onShowQRCode={handleShowQRCode} />
       
       <div className="flex h-[calc(100vh-48px)] p-2 gap-2">
-        <div className="w-2/3 backdrop-blur-2xl bg-white/60 border border-[#60acc2]/40 rounded-2xl shadow-2xl shadow-[#d0ccce]/30">
+        <div className="w-2/3 backdrop-blur-2xl bg-white/90 border border-[#FFD306]/40 rounded-2xl shadow-2xl shadow-[#FFD306]/30">
           <ChatInterface 
             messages={messages}
             onSendMessage={handleSendMessage}
@@ -210,7 +209,7 @@ export default function App() {
           />
         </div>
         
-        <div className="w-1/3 backdrop-blur-2xl bg-white/55 border border-[#ccd9ed]/50 rounded-2xl shadow-2xl shadow-[#d0ccce]/30">
+        <div className="w-1/3 backdrop-blur-2xl bg-white/85 border border-[#FFD306]/50 rounded-2xl shadow-2xl shadow-[#FFD306]/30">
           <KnowledgeBaseManager
             vectorDatabase={vectorDatabase}
             retrievedFragments={retrievedFragments}
@@ -221,11 +220,6 @@ export default function App() {
           />
         </div>
       </div>
-
-      <QRCodeModal 
-        open={showQRModal} 
-        onOpenChange={setShowQRModal} 
-      />
       
       <FileUploadModal
         open={showUploadModal}

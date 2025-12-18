@@ -15,12 +15,12 @@ export function DocumentFragmentModal({ open, onOpenChange, fragment }: Document
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl max-h-[85vh] backdrop-blur-2xl bg-white border border-[#f5d565]/70 shadow-2xl shadow-amber-100/50 flex flex-col">
+      <DialogContent className="sm:max-w-4xl max-h-[85vh] backdrop-blur-2xl bg-gradient-to-br from-[#ccd9ed]/95 to-[#d1d3e6]/90 border border-[#60acc2]/40 shadow-2xl shadow-[#d0ccce]/30 flex flex-col">
         <DialogHeader className="flex-shrink-0 pb-0">
-          <DialogTitle className="text-[#7a4a00] text-lg font-semibold">
+          <DialogTitle className="text-[#405a03] text-lg">
             文档片段{fragment.index}
           </DialogTitle>
-          <DialogDescription className="text-gray-700 text-sm">
+          <DialogDescription className="text-gray-600 text-sm">
             查看完整的文档片段内容和相关性评分
           </DialogDescription>
         </DialogHeader>
@@ -29,7 +29,7 @@ export function DocumentFragmentModal({ open, onOpenChange, fragment }: Document
           <div className="space-y-3">
             <Badge 
               variant="secondary" 
-              className="bg-gradient-to-r from-[#fff4c2] to-[#fde68a] text-[#7a4a00] border border-[#f3c73c]/70 backdrop-blur-sm shadow-sm text-xs inline-block"
+              className="bg-gradient-to-r from-green-50 to-green-100 text-green-700 border-green-300 backdrop-blur-sm shadow-sm text-xs inline-block"
             >
               相关性 {fragment.relevance}
             </Badge>

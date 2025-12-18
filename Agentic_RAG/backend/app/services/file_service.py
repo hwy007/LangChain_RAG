@@ -76,17 +76,27 @@ class FileService:
         if not os.path.exists(save_path):
             os.makedirs(save_path, exist_ok=True)
 
-        vector_store.save_local(save_path)
+        # vector_store.save_local(save_path)
 
-        # 保存元数据 (metadata.json)
-        metadata = {
-            "kb_name": kb_name,
-            "files": file_names,
-            "topics": topic_list,
-            "doc_count": len(final_splits)
-        }
-        with open("metadata.json", "w", encoding="utf-8") as f:
-            json.dump(metadata, f, ensure_ascii=False, indent=2)
+        # Windows 路径修复
+        original_cwd = os.getcwd()
+        try:
+            # 切换工作目录解决 FAISS 中文路径 bug
+            os.chdir(save_path)
+            vector_store.save_local(".")
+
+            # 保存元数据 (metadata.json)
+            metadata = {
+                "kb_name": kb_name,
+                "files": file_names,
+                "topics": topic_list,
+                "doc_count": len(final_splits)
+            }
+            with open("metadata.json", "w", encoding="utf-8") as f:
+                json.dump(metadata, f, ensure_ascii=False, indent=2)
+        
+        finally:
+            os.chdir(original_cwd)
         
         return len(final_splits)
     
@@ -100,12 +110,25 @@ class FileService:
         
         embeddings = get_embeddings()
 
-        return FAISS.load_local(
-            folder_path=path,
-            embeddings=embeddings,
-            allow_dangerous_deserialization=True
-        )
-    
+        try:
+            return FAISS.load_local(
+                folder_path=path,
+                embeddings=embeddings,
+                allow_dangerous_deserialization=True
+            )
+        except Exception:
+            # 备用加载方案：切换目录加载
+            original_cwd = os.getcwd()
+            try:
+                os.chdir(path)
+                return FAISS.load_local(
+                    folder_path=".", 
+                    embeddings=embeddings, 
+                    allow_dangerous_deserialization=True
+                )
+            finally:
+                os.chdir(original_cwd)
+
 
     @staticmethod
     def load_kb_metadata(kb_name: str) -> Dict[str, Any]:

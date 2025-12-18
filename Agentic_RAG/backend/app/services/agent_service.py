@@ -59,7 +59,7 @@ class AgentService:
                         # 兼容处理：确保 artifact 里面存的是易于解析的对象或原始 Document
                         # 这里我们存原始 Document 对象，稍后在外部解析
                         # 为了携带score，我们动态给doc加个属性，或者封装一下
-                        doc.metadata["score"] = score
+                        doc.metadata["score"] = float(score)
                         artifacts.append(doc)
                     
                     return serialized, artifacts
@@ -72,7 +72,7 @@ class AgentService:
 
         # === 执行 Agent ===
         messages = [{"role": "user", "content": query}]
-        response = agent.invoke(messages)
+        response = agent.invoke({"messages": messages})
 
         # === 解析结果 ===
         # 从 response["messages"] 中提取最终回答和 Artifacts
@@ -120,6 +120,6 @@ class AgentService:
             results.append(DocSource(
                 content=doc.page_content,
                 metadata=doc.metadata,
-                score=score
+                score=float(score)
             ))
         return results

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { ChatInterface } from './components/ChatInterface';
 import { KnowledgeBaseManager } from './components/KnowledgeBaseManager';
-import { QRCodeModal } from './components/QRCodeModal';
 import { FileUploadModal } from './components/FileUploadModal';
 import { DocumentFragmentModal } from './components/DocumentFragmentModal';
 import { chat, recallTest } from './services/api';
@@ -33,7 +32,6 @@ export interface Message {
 }
 
 export default function App() {
-  const [showQRModal, setShowQRModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showDocumentModal, setShowDocumentModal] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<DocumentFragment | null>(null);
@@ -54,10 +52,6 @@ export default function App() {
       }
     });
   }, []);
-
-  const handleShowQRCode = () => {
-    setShowQRModal(true);
-  };
 
   const handleStartUpload = () => {
     setShowUploadModal(true);
@@ -195,12 +189,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#a8c5e6] via-[#b8d4f0] via-[#cdd9ed] to-[#e8c4d8] text-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-[#fffaf0] via-[#fff1c1] via-[#ffe595] to-[#ffd76f] text-gray-900">
       <Toaster position="top-center" richColors />
-      <Header onShowQRCode={handleShowQRCode} />
+      <Header />
       
       <div className="flex h-[calc(100vh-48px)] p-2 gap-2">
-        <div className="w-2/3 backdrop-blur-2xl bg-white/60 border border-[#60acc2]/40 rounded-2xl shadow-2xl shadow-[#d0ccce]/30">
+        <div className="w-2/3 backdrop-blur-2xl bg-white/80 border border-[#f2c94c]/40 rounded-2xl shadow-2xl shadow-[#f3d46b]/25">
           <ChatInterface 
             messages={messages}
             onSendMessage={handleSendMessage}
@@ -210,7 +204,7 @@ export default function App() {
           />
         </div>
         
-        <div className="w-1/3 backdrop-blur-2xl bg-white/55 border border-[#ccd9ed]/50 rounded-2xl shadow-2xl shadow-[#d0ccce]/30">
+        <div className="w-1/3 backdrop-blur-2xl bg-white/75 border border-[#f2c94c]/35 rounded-2xl shadow-2xl shadow-[#f3d46b]/25">
           <KnowledgeBaseManager
             vectorDatabase={vectorDatabase}
             retrievedFragments={retrievedFragments}
@@ -222,11 +216,6 @@ export default function App() {
         </div>
       </div>
 
-      <QRCodeModal 
-        open={showQRModal} 
-        onOpenChange={setShowQRModal} 
-      />
-      
       <FileUploadModal
         open={showUploadModal}
         onOpenChange={setShowUploadModal}

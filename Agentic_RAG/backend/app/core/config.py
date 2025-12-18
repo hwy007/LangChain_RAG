@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
-from langchain_deepseek import ChatDeepSeek
+# from langchain_deepseek import ChatDeepSeek
+from langchain_openai import ChatOpenAI
 from langchain_huggingface import HuggingFaceEmbeddings
 
 load_dotenv(override=True)
@@ -15,11 +16,17 @@ os.makedirs(VECTOR_STORE_DIR, exist_ok=True)
 
 # 模型初始化
 def get_llm():
-    return ChatDeepSeek(
-        model="deepseek-chat",
+    # return ChatDeepSeek(
+    #     model="deepseek-chat",
+    #     temperature=0.1,
+    #     api_key=os.getenv("DEEPSEEK_API_KEY"),
+    #     base_url=os.getenv("DEEPSEEK_BASE_URL")
+    # )
+    return ChatOpenAI(
+        model="gpt-5-mini",
         temperature=0.1,
-        api_key=os.getenv("DEEPSEEK_API_KEY"),
-        base_url=os.getenv("DEEPSEEK_BASE_URL")
+        api_key=os.getenv("OPENAI_API_KEY"),
+        base_url=os.getenv("OPENAI_BASE_URL")
     )
 
 def get_embeddings():

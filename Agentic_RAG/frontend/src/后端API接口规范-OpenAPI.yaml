@@ -1,0 +1,1085 @@
+openapi: 3.0.3
+info:
+  title: RAG本地知识库问答引擎 - 后端API
+  description: |
+    基于LangGraph构建的RAG系统后端服务，支持PDF、Markdown、Text文件的文本提取、
+    切分和本地向量数据库创建，提供智能问答和语义检索功能。
+    
+    ## 核心功能
+    - 🤖 智能对话问答 (基于RAG检索增强生成)
+    - 📚 多格式文档处理 (PDF、Markdown、Text)
+    - 🔍 向量化语义检索
+    - 💾 本地向量数据库管理
+    - ⚙️ 可配置的文档切分参数
+    
+    ## 数据安全
+    - 本系统仅处理符合特定格式要求的数据集
+    - 所有上传文件将经过严格的格式验证和内容检查
+    - 不合规数据将被拒绝处理并返回详细错误信息
+    
+  version: 1.0.0
+  contact:
+    name: 九天Hector
+    email: support@example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8000/api
+    description: 本地开发服务器
+  - url: https://api.rag-system.com/api
+    description: 生产环境服务器
+
+tags:
+  - name: chat
+    description: 智能对话问答接口
+  - name: upload
+    description: 文件上传和数据库创建接口
+  - name: retrieve
+    description: 语义检索测试接口
+  - name: database
+    description: 向量数据库管理接口
+  - name: system
+    description: 系统状态和健康检查接口
+
+paths:
+  /chat:
+    post:
+      tags:
+        - chat
+      summary: 发送聊天消息
+      description: |
+        向AI助手发送用户问题，基于指定的向量数据库进行RAG问答。
+        系统将检索相关文档片段，结合大语言模型生成准确回答。
+      operationId: sendChatMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+            examples:
+              basic_question:
+                summary: 基础问题示例
+                value:
+                  message: "什么是LangGraph？"
+                  database_name: "my_knowledge_base"
+              complex_question:
+                summary: 复杂问题示例
+                value:
+                  message: "请详细解释RAG系统的工作原理和优势"
+                  database_name: "technical_docs"
+      responses:
+        '200':
+          description: 成功返回AI回答
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+              examples:
+                successful_response:
+                  summary: 成功响应示例
+                  value:
+                    response: "LangGraph 是一个基于图结构的AI工作流编排框架，它允许开发者构建复杂的多步骤AI应用。"
+                    document_fragments:
+                      - id: "frag_001"
+                        content: "LangGraph 是一个基于图结构的AI工作流编排框架..."
+                        relevance: 0.85
+                        index: 1
+                        source_file: "langgraph_intro.md"
+                        chunk_id: "chunk_001"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          description: 指定的数据库不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "DATABASE_NOT_FOUND"
+                message: "数据库 'my_knowledge_base' 不存在"
+                details: "请先上传文档创建数据库"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /upload:
+    post:
+      tags:
+        - upload
+      summary: 上传文件并创建向量数据库
+      description: |
+        上传文档文件并根据配置参数创建向量数据库。支持以下格式：
+        - PDF文件 (.pdf)
+        - Markdown文件 (.md)
+        - 纯文本文件 (.txt)
+        
+        ### 数据验证规则
+        - 文件大小限制: 单文件最大50MB，总计最大200MB
+        - 文件数量限制: 最多50个文件
+        - 内容检查: 仅处理符合预定义模式的文档结构
+        - 编码要求: 文本文件必须为UTF-8编码
+      operationId: uploadFiles
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - files
+                - config
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: 要上传的文档文件数组
+                  maxItems: 50
+                config:
+                  $ref: '#/components/schemas/DatabaseConfig'
+            examples:
+              basic_upload:
+                summary: 基础上传示例
+                value:
+                  config:
+                    name: "my_knowledge_base"
+                    max_chunk_size: 2048
+                    max_overlap: 100
+                    top_k: 3
+      responses:
+        '201':
+          description: 成功创建向量数据库
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResponse'
+              example:
+                success: true
+                database:
+                  name: "my_knowledge_base"
+                  status: "created"
+                  document_count: 5
+                  chunk_count: 125
+                  created_at: "2024-01-15T10:30:00Z"
+                  config:
+                    max_chunk_size: 2048
+                    max_overlap: 100
+                    top_k: 3
+                processing_summary:
+                  total_files: 5
+                  processed_files: 5
+                  failed_files: 0
+                  total_chunks: 125
+                  processing_time_seconds: 45.2
+        '400':
+          description: 请求参数错误或文件格式不支持
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalid_format:
+                  summary: 不支持的文件格式
+                  value:
+                    error: "INVALID_FILE_FORMAT"
+                    message: "不支持的文件格式"
+                    details: "仅支持 PDF、Markdown(.md) 和 Text(.txt) 格式"
+                data_validation_failed:
+                  summary: 数据验证失败
+                  value:
+                    error: "DATA_VALIDATION_FAILED"
+                    message: "上传的数据不符合处理要求"
+                    details: "文件 'document.pdf' 包含不支持的数据格式或结构"
+        '409':
+          description: 数据库名称已存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "DATABASE_EXISTS"
+                message: "数据库名称已存在"
+                details: "请选择其他名称或删除现有数据库"
+        '413':
+          description: 文件大小超出限制
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "FILE_TOO_LARGE"
+                message: "文件大小超出限制"
+                details: "单文件最大50MB，总计最大200MB"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /retrieve:
+    post:
+      tags:
+        - retrieve
+      summary: 语义检索测试
+      description: |
+        在指定的向量数据库中执行语义检索，返回与查询最相关的文档片段。
+        用于测试数据库的检索效果和调试检索参数。
+      operationId: retrieveDocuments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrieveRequest'
+            examples:
+              basic_search:
+                summary: 基础检索示例
+                value:
+                  query: "LangGraph的工作原理"
+                  database_name: "my_knowledge_base"
+                  top_k: 3
+              advanced_search:
+                summary: 高级检索示例
+                value:
+                  query: "如何实现RAG系统的文档切分"
+                  database_name: "technical_docs"
+                  top_k: 5
+                  min_relevance: 0.6
+      responses:
+        '200':
+          description: 成功返回检索结果
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrieveResponse'
+              example:
+                fragments:
+                  - id: "frag_001"
+                    content: "LangGraph 是一个基于图结构的AI工作流编排框架..."
+                    relevance: 0.85
+                    index: 1
+                    source_file: "langgraph_guide.md"
+                    chunk_id: "chunk_001"
+                  - id: "frag_002"
+                    content: "与传统的链式调用不同，LangGraph采用有向无环图..."
+                    relevance: 0.78
+                    index: 2
+                    source_file: "langgraph_guide.md"
+                    chunk_id: "chunk_002"
+                query_info:
+                  original_query: "LangGraph的工作原理"
+                  processed_query: "langgraph 工作 原理"
+                  search_time_ms: 45
+                  total_chunks_searched: 125
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          description: 指定的数据库不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "DATABASE_NOT_FOUND"
+                message: "数据库不存在"
+                details: "数据库 'my_knowledge_base' 未找到"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /database/{name}:
+    delete:
+      tags:
+        - database
+      summary: 删除向量数据库
+      description: |
+        完全删除指定的向量数据库及其所有数据，包括：
+        - 向量索引文件
+        - 原始文档片段
+        - 元数据信息
+        
+        ⚠️ 此操作不可逆，请谨慎使用。
+      operationId: deleteDatabase
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: 要删除的数据库名称
+          schema:
+            type: string
+            example: "my_knowledge_base"
+      responses:
+        '200':
+          description: 成功删除数据库
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+              example:
+                success: true
+                message: "数据库已成功删除"
+                deleted_database:
+                  name: "my_knowledge_base"
+                  document_count: 5
+                  chunk_count: 125
+                  deleted_at: "2024-01-15T11:45:00Z"
+        '404':
+          description: 数据库不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "DATABASE_NOT_FOUND"
+                message: "数据库不存在"
+                details: "数据库 'my_knowledge_base' 未找到"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    get:
+      tags:
+        - database
+      summary: 获取数据库状态信息
+      description: |
+        获取指定向量数据库的详细状态信息，包括文档数量、
+        向量维度、创建时间等元数据。
+      operationId: getDatabaseStatus
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: 数据库名称
+          schema:
+            type: string
+            example: "my_knowledge_base"
+      responses:
+        '200':
+          description: 成功返回数据库状态
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseStatus'
+              example:
+                name: "my_knowledge_base"
+                is_created: true
+                document_count: 5
+                chunk_count: 125
+                vector_dimension: 1536
+                created_at: "2024-01-15T10:30:00Z"
+                last_updated: "2024-01-15T10:35:00Z"
+                config:
+                  max_chunk_size: 2048
+                  max_overlap: 100
+                  top_k: 3
+                statistics:
+                  avg_chunk_size: 1850
+                  total_size_mb: 12.5
+                  supported_formats: ["pdf", "md", "txt"]
+        '404':
+          description: 数据库不存在
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "DATABASE_NOT_FOUND"
+                message: "数据库不存在"
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /database:
+    get:
+      tags:
+        - database
+      summary: 获取所有数据库列表
+      description: 获取当前系统中所有向量数据库的基本信息列表
+      operationId: listDatabases
+      responses:
+        '200':
+          description: 成功返回数据库列表
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseListResponse'
+              example:
+                databases:
+                  - name: "my_knowledge_base"
+                    document_count: 5
+                    chunk_count: 125
+                    created_at: "2024-01-15T10:30:00Z"
+                    status: "active"
+                  - name: "technical_docs"
+                    document_count: 12
+                    chunk_count: 340
+                    created_at: "2024-01-14T15:20:00Z"
+                    status: "active"
+                total_count: 2
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /health:
+    get:
+      tags:
+        - system
+      summary: 系统健康检查
+      description: |
+        获取系统运行状态和健康信息，包括：
+        - 服务运行状态
+        - 数据库连接状态
+        - AI模型加载状态
+        - 系统资源使用情况
+      operationId: healthCheck
+      responses:
+        '200':
+          description: 系统运行正常
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                status: "healthy"
+                timestamp: "2024-01-15T12:00:00Z"
+                version: "1.0.0"
+                uptime_seconds: 86400
+                services:
+                  llm_service: "healthy"
+                  vector_db: "healthy"
+                  file_processor: "healthy"
+                system_info:
+                  memory_usage_mb: 2048
+                  cpu_usage_percent: 25.5
+                  disk_usage_percent: 15.2
+                  active_databases: 2
+        '503':
+          description: 系统服务不可用
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                status: "unhealthy"
+                timestamp: "2024-01-15T12:00:00Z"
+                services:
+                  llm_service: "error"
+                  vector_db: "healthy"
+                  file_processor: "healthy"
+                errors:
+                  - "LLM服务连接超时"
+
+  /system/supported-formats:
+    get:
+      tags:
+        - system
+      summary: 获取支持的文件格式
+      description: |
+        获取系统支持处理的文件格式列表和相关限制信息。
+        用于前端验证和用户提示。
+      operationId: getSupportedFormats
+      responses:
+        '200':
+          description: 成功返回支持的格式信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportedFormatsResponse'
+              example:
+                supported_formats:
+                  - extension: ".pdf"
+                    mime_type: "application/pdf"
+                    max_size_mb: 50
+                    description: "PDF文档"
+                  - extension: ".md"
+                    mime_type: "text/markdown"
+                    max_size_mb: 10
+                    description: "Markdown文档"
+                  - extension: ".txt"
+                    mime_type: "text/plain"
+                    max_size_mb: 10
+                    description: "纯文本文档"
+                limitations:
+                  max_files_per_upload: 50
+                  max_total_size_mb: 200
+                  max_file_size_mb: 50
+                  required_encoding: "UTF-8"
+
+components:
+  schemas:
+    # 请求体模式
+    ChatRequest:
+      type: object
+      required:
+        - message
+        - database_name
+      properties:
+        message:
+          type: string
+          description: 用户输入的问题
+          minLength: 1
+          maxLength: 2000
+          example: "什么是LangGraph？"
+        database_name:
+          type: string
+          description: 要查询的数据库名称
+          pattern: '^[a-zA-Z0-9_-]+$'
+          minLength: 1
+          maxLength: 50
+          example: "my_knowledge_base"
+
+    DatabaseConfig:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: 数据库名称
+          pattern: '^[a-zA-Z0-9_-]+$'
+          minLength: 1
+          maxLength: 50
+          example: "my_knowledge_base"
+        max_chunk_size:
+          type: integer
+          description: 文档切分最大长度（tokens）
+          minimum: 100
+          maximum: 8192
+          default: 2048
+          example: 2048
+        max_overlap:
+          type: integer
+          description: 切分重叠最大长度（tokens）
+          minimum: 0
+          maximum: 500
+          default: 100
+          example: 100
+        top_k:
+          type: integer
+          description: 检索返回的最大文档片段数量
+          minimum: 1
+          maximum: 20
+          default: 3
+          example: 3
+
+    RetrieveRequest:
+      type: object
+      required:
+        - query
+        - database_name
+      properties:
+        query:
+          type: string
+          description: 检索查询文本
+          minLength: 1
+          maxLength: 1000
+          example: "LangGraph的工作原理"
+        database_name:
+          type: string
+          description: 要检索的数据库名称
+          pattern: '^[a-zA-Z0-9_-]+$'
+          example: "my_knowledge_base"
+        top_k:
+          type: integer
+          description: 返回结果数量
+          minimum: 1
+          maximum: 20
+          default: 3
+          example: 3
+        min_relevance:
+          type: number
+          description: 最小相关性阈值
+          minimum: 0.0
+          maximum: 1.0
+          default: 0.0
+          example: 0.6
+
+    # 响应体模式
+    ChatResponse:
+      type: object
+      required:
+        - response
+        - document_fragments
+      properties:
+        response:
+          type: string
+          description: AI生成的回答
+          example: "LangGraph 是一个基于图结构的AI工作流编排框架..."
+        document_fragments:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentFragment'
+          description: 参考的文档片段列表
+          maxItems: 20
+
+    DocumentFragment:
+      type: object
+      required:
+        - id
+        - content
+        - relevance
+        - index
+      properties:
+        id:
+          type: string
+          description: 文档片段唯一标识
+          example: "frag_001"
+        content:
+          type: string
+          description: 文档片段内容
+          example: "LangGraph 是一个基于图结构的AI工作流编排框架..."
+        relevance:
+          type: number
+          description: 相关性评分（0-1）
+          minimum: 0.0
+          maximum: 1.0
+          example: 0.85
+        index:
+          type: integer
+          description: 片段在原文档中的索引
+          minimum: 1
+          example: 1
+        source_file:
+          type: string
+          description: 源文件名称
+          example: "langgraph_guide.md"
+        chunk_id:
+          type: string
+          description: 文档块ID
+          example: "chunk_001"
+
+    UploadResponse:
+      type: object
+      required:
+        - success
+        - database
+        - processing_summary
+      properties:
+        success:
+          type: boolean
+          description: 上传是否成功
+          example: true
+        database:
+          $ref: '#/components/schemas/DatabaseInfo'
+        processing_summary:
+          $ref: '#/components/schemas/ProcessingSummary'
+
+    DatabaseInfo:
+      type: object
+      required:
+        - name
+        - status
+        - document_count
+        - chunk_count
+        - created_at
+        - config
+      properties:
+        name:
+          type: string
+          description: 数据库名称
+          example: "my_knowledge_base"
+        status:
+          type: string
+          enum: [created, processing, error]
+          description: 数据库状态
+          example: "created"
+        document_count:
+          type: integer
+          description: 文档数量
+          minimum: 0
+          example: 5
+        chunk_count:
+          type: integer
+          description: 文档片段数量
+          minimum: 0
+          example: 125
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2024-01-15T10:30:00Z"
+        config:
+          $ref: '#/components/schemas/DatabaseConfig'
+
+    ProcessingSummary:
+      type: object
+      required:
+        - total_files
+        - processed_files
+        - failed_files
+        - total_chunks
+        - processing_time_seconds
+      properties:
+        total_files:
+          type: integer
+          description: 总文件数
+          example: 5
+        processed_files:
+          type: integer
+          description: 成功处理的文件数
+          example: 5
+        failed_files:
+          type: integer
+          description: 处理失败的文件数
+          example: 0
+        failed_file_details:
+          type: array
+          items:
+            type: object
+            properties:
+              filename:
+                type: string
+              error:
+                type: string
+              reason:
+                type: string
+          description: 失败文件详情
+        total_chunks:
+          type: integer
+          description: 生成的总文档片段数
+          example: 125
+        processing_time_seconds:
+          type: number
+          description: 处理耗时（秒）
+          example: 45.2
+
+    RetrieveResponse:
+      type: object
+      required:
+        - fragments
+        - query_info
+      properties:
+        fragments:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentFragment'
+          description: 检索到的文档片段
+        query_info:
+          $ref: '#/components/schemas/QueryInfo'
+
+    QueryInfo:
+      type: object
+      required:
+        - original_query
+        - processed_query
+        - search_time_ms
+        - total_chunks_searched
+      properties:
+        original_query:
+          type: string
+          description: 原始查询
+          example: "LangGraph的工作原理"
+        processed_query:
+          type: string
+          description: 处理后的查询
+          example: "langgraph 工作 原理"
+        search_time_ms:
+          type: integer
+          description: 检索耗时（毫秒）
+          example: 45
+        total_chunks_searched:
+          type: integer
+          description: 搜索的总文档片段数
+          example: 125
+
+    DatabaseStatus:
+      type: object
+      required:
+        - name
+        - is_created
+        - document_count
+        - chunk_count
+        - created_at
+        - config
+      properties:
+        name:
+          type: string
+          description: 数据库名称
+          example: "my_knowledge_base"
+        is_created:
+          type: boolean
+          description: 数据库是否已创建
+          example: true
+        document_count:
+          type: integer
+          description: 文档数量
+          example: 5
+        chunk_count:
+          type: integer
+          description: 文档片段数量
+          example: 125
+        vector_dimension:
+          type: integer
+          description: 向量维度
+          example: 1536
+        created_at:
+          type: string
+          format: date-time
+          description: 创建时间
+          example: "2024-01-15T10:30:00Z"
+        last_updated:
+          type: string
+          format: date-time
+          description: 最后更新时间
+          example: "2024-01-15T10:35:00Z"
+        config:
+          $ref: '#/components/schemas/DatabaseConfig'
+        statistics:
+          $ref: '#/components/schemas/DatabaseStatistics'
+
+    DatabaseStatistics:
+      type: object
+      properties:
+        avg_chunk_size:
+          type: integer
+          description: 平均文档片段大小
+          example: 1850
+        total_size_mb:
+          type: number
+          description: 数据库总大小（MB）
+          example: 12.5
+        supported_formats:
+          type: array
+          items:
+            type: string
+          description: 支持的文件格式
+          example: ["pdf", "md", "txt"]
+
+    DatabaseListResponse:
+      type: object
+      required:
+        - databases
+        - total_count
+      properties:
+        databases:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatabaseSummary'
+        total_count:
+          type: integer
+          description: 数据库总数
+          example: 2
+
+    DatabaseSummary:
+      type: object
+      required:
+        - name
+        - document_count
+        - chunk_count
+        - created_at
+        - status
+      properties:
+        name:
+          type: string
+          example: "my_knowledge_base"
+        document_count:
+          type: integer
+          example: 5
+        chunk_count:
+          type: integer
+          example: 125
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T10:30:00Z"
+        status:
+          type: string
+          enum: [active, processing, error, inactive]
+          example: "active"
+
+    DeleteResponse:
+      type: object
+      required:
+        - success
+        - message
+        - deleted_database
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "数据库已成功删除"
+        deleted_database:
+          type: object
+          properties:
+            name:
+              type: string
+              example: "my_knowledge_base"
+            document_count:
+              type: integer
+              example: 5
+            chunk_count:
+              type: integer
+              example: 125
+            deleted_at:
+              type: string
+              format: date-time
+              example: "2024-01-15T11:45:00Z"
+
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+        - version
+        - services
+      properties:
+        status:
+          type: string
+          enum: [healthy, unhealthy, degraded]
+          description: 系统整体状态
+          example: "healthy"
+        timestamp:
+          type: string
+          format: date-time
+          description: 检查时间
+          example: "2024-01-15T12:00:00Z"
+        version:
+          type: string
+          description: 系统版本
+          example: "1.0.0"
+        uptime_seconds:
+          type: integer
+          description: 系统运行时间（秒）
+          example: 86400
+        services:
+          type: object
+          properties:
+            llm_service:
+              type: string
+              enum: [healthy, unhealthy, error]
+              example: "healthy"
+            vector_db:
+              type: string
+              enum: [healthy, unhealthy, error]
+              example: "healthy"
+            file_processor:
+              type: string
+              enum: [healthy, unhealthy, error]
+              example: "healthy"
+        system_info:
+          type: object
+          properties:
+            memory_usage_mb:
+              type: number
+              example: 2048
+            cpu_usage_percent:
+              type: number
+              example: 25.5
+            disk_usage_percent:
+              type: number
+              example: 15.2
+            active_databases:
+              type: integer
+              example: 2
+        errors:
+          type: array
+          items:
+            type: string
+          description: 错误信息列表
+          example: ["LLM服务连接超时"]
+
+    SupportedFormatsResponse:
+      type: object
+      required:
+        - supported_formats
+        - limitations
+      properties:
+        supported_formats:
+          type: array
+          items:
+            type: object
+            properties:
+              extension:
+                type: string
+                example: ".pdf"
+              mime_type:
+                type: string
+                example: "application/pdf"
+              max_size_mb:
+                type: number
+                example: 50
+              description:
+                type: string
+                example: "PDF文档"
+        limitations:
+          type: object
+          properties:
+            max_files_per_upload:
+              type: integer
+              example: 50
+            max_total_size_mb:
+              type: number
+              example: 200
+            max_file_size_mb:
+              type: number
+              example: 50
+            required_encoding:
+              type: string
+              example: "UTF-8"
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: 错误代码
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          description: 错误描述
+          example: "请求参数验证失败"
+        details:
+          type: string
+          description: 详细错误信息
+          example: "字段 'message' 不能为空"
+        timestamp:
+          type: string
+          format: date-time
+          description: 错误发生时间
+          example: "2024-01-15T12:00:00Z"
+        request_id:
+          type: string
+          description: 请求ID，用于问题追踪
+          example: "req_123456789"
+
+  responses:
+    BadRequest:
+      description: 请求参数错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "VALIDATION_ERROR"
+            message: "请求参数验证失败"
+            details: "字段验证错误"
+
+    InternalServerError:
+      description: 服务器内部错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "INTERNAL_SERVER_ERROR"
+            message: "服务器内部错误"
+            details: "请稍后重试或联系技术支持"
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT Bearer Token认证（如需要）
+        格式: Authorization: Bearer <token>
+
+# 全局安全配置（可选）
+# security:
+#   - BearerAuth: []
+
+# 外部文档链接
+externalDocs:
+  description: 查看完整的前端产品需求文档
+  url: /前端产品需求文档-PRD.md

@@ -54,7 +54,7 @@ export function KnowledgeBaseManager({
           </p>
           <Button 
             onClick={onStartUpload}
-            className="bg-gradient-to-r from-[#FFD306]/80 to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306]/80 text-white border-0 shadow-lg backdrop-blur-sm transition-colors duration-300 cursor-pointer"
+            className="bg-gradient-to-r from-primary/80 to-primary hover:from-primary hover:to-primary/80 text-white border-0 shadow-lg backdrop-blur-sm transition-colors duration-300 cursor-pointer"
             size="default"
           >
             <Upload className="w-3 h-3 mr-1" />
@@ -67,17 +67,17 @@ export function KnowledgeBaseManager({
 
   return (
     <div className="h-full flex flex-col">
-      <div className="p-3 border-b border-[#FFD306]/30">
+      <div className="p-3 border-b border-primary/30">
         <div className="flex items-center justify-between mb-1">
           <div className="flex items-center space-x-1">
-            <Database className="w-3 h-3 text-[#FFD306]" />
+            <Database className="w-3 h-3 text-primary" />
             <h3 className="text-sm text-gray-800 font-medium">{vectorDatabase.name}</h3>
           </div>
           <Button
             onClick={onDeleteDatabase}
             variant="outline"
             size="sm"
-            className="bg-gradient-to-r from-[#FFD306]/80 to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306]/80 border-[#FFD306]/40 text-gray-700 backdrop-blur-sm shadow-sm transition-colors duration-300 cursor-pointer"
+            className="bg-gradient-to-r from-primary/80 to-primary hover:from-primary hover:to-primary/80 border-primary/40 text-gray-700 backdrop-blur-sm shadow-sm transition-colors duration-300 cursor-pointer"
           >
             <Trash2 className="w-3 h-3" />
           </Button>
@@ -92,7 +92,7 @@ export function KnowledgeBaseManager({
         </div>
       </div>
 
-      <div className="p-3 border-b border-[#FFD306]/30">
+      <div className="p-3 border-b border-primary/30">
         <h4 className="text-sm mb-2 text-gray-800 font-medium">召回测试</h4>
         <div className="flex space-x-2">
           <Input
@@ -100,12 +100,12 @@ export function KnowledgeBaseManager({
             onChange={(e) => setTestQuery(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="输入查询语句进行召回测试..."
-            className="flex-1 bg-white/80 border-[#FFD306]/40 text-gray-800 placeholder-gray-500 backdrop-blur-sm focus:border-[#FFD306]/50 transition-colors duration-300 shadow-sm"
+            className="flex-1 bg-white/80 border-primary/40 text-gray-800 placeholder-gray-500 backdrop-blur-sm focus:border-primary/50 transition-colors duration-300 shadow-sm"
           />
           <Button 
             onClick={handleTestSubmit}
             disabled={!testQuery.trim()}
-            className="bg-gradient-to-r from-[#FFD306]/80 to-[#FFD306] hover:from-[#FFD306] hover:to-[#FFD306]/80 text-white border-0 shadow-lg backdrop-blur-sm transition-colors duration-300 disabled:opacity-50 cursor-pointer"
+            className="bg-gradient-to-r from-primary/80 to-primary hover:from-primary hover:to-primary/80 text-white border-0 shadow-lg backdrop-blur-sm transition-colors duration-300 disabled:opacity-50 cursor-pointer"
             size="sm"
           >
             <Search className="w-3 h-3" />
@@ -118,7 +118,7 @@ export function KnowledgeBaseManager({
         <ScrollArea className="flex-1 overflow-y-auto">
           {retrievedFragments.length === 0 ? (
             <div className="text-center text-gray-500 mt-6">
-              <FileText className="w-8 h-8 mx-auto mb-2 text-[#FFD306]" />
+              <FileText className="w-8 h-8 mx-auto mb-2 text-primary" />
               <p className="text-sm text-gray-600">暂无召回结果</p>
               <p className="text-xs mt-1 text-gray-500">请输入查询语句进行测试</p>
             </div>
@@ -128,10 +128,10 @@ export function KnowledgeBaseManager({
                 <button
                   key={fragment.id}
                   onClick={() => onDocumentFragmentClick(fragment)}
-                  className="w-full text-left p-2 bg-[#FFD306]/10 hover:bg-[#FFD306]/20 rounded-lg border border-[#FFD306]/30 transition-colors duration-300 backdrop-blur-sm shadow-sm cursor-pointer"
+                  className="w-full text-left p-2 bg-primary/10 hover:bg-primary/20 rounded-lg border border-primary/30 transition-colors duration-300 backdrop-blur-sm shadow-sm cursor-pointer"
                 >
                   <div className="flex items-center justify-between mb-0.5">
-                    <span className="text-[#FFD306] text-sm font-medium">文档片段{fragment.index}</span>
+                    <span className="text-primary text-sm font-medium">文档片段{fragment.index}</span>
                     <span className="text-green-600 text-xs font-medium">相关性 {fragment.relevance.toFixed(2)}</span>
                   </div>
                   <p className="text-gray-700 text-xs leading-relaxed">
